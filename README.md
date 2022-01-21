@@ -8,3 +8,4 @@ This sample is running live and can be tested at: https://jameelaesahlsproxy.azu
 
 In Summary - You create a proxy to receive the manifest from the streaming endpoint, which it then modifies the manifest playlist so that the URLs contain a token and can then be played back in Safari. This v2 sample contains the authentication system code which will automatically issue an authorized token for each streaming request.  The token will expire in 60mins(1hr).
 
+![image](https://user-images.githubusercontent.com/33047452/150571047-8e848102-0b98-4fd2-b560-808a12815c5d.png)
