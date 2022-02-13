@@ -1,4 +1,12 @@
-﻿<div class="jumbotron">
+﻿ <!--*****START OF Azure Media Player Scripts*****-->
+<!--Note: DO NOT USE the "latest" folder in production. Replace "latest" with a version number like "1.0.0"-->
+<!--EX:<script src="//amp.azure.net/libs/amp/1.0.0/azuremediaplayer.min.js"></script>-->
+<!--Azure Media Player versions can be queried from //aka.ms/ampchangelog-->
+<link href="//amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
+<script src="//amp.azure.net/libs/amp/latest/azuremediaplayer.min.js"></script>
+<!--*****END OF Azure Media Player Scripts*****-->
+
+<div class="jumbotron">
     <h1>HLS Manifest Proxy Demo v2</h1>
     <p class="lead">Demo to showcase the use of the ManifestProxyController, as outlined in the <a href="http://azure.microsoft.com/blog/2015/03/06/how-to-make-token-authorized-aes-encrypted-hls-stream-working-in-safari/">blogpost</a>.  Revised by JameelaEsa to include an Authentication Service to automatically generate tokens.</p>
 </div>
@@ -20,9 +28,9 @@
 
             <form method="post" action="">
                 Manifest URL:<br />
-                <input type="text" name="playbackurl" value="@playbackurl" size="150"/><br />
+                <input type="text" name="playbackurl" value="@playbackurl" size="150" /><br />
                 JWT Token:<br />
-                <input type="text" name="webtoken" value="@webtoken" size="150"/><br /><br />
+                <input type="text" name="webtoken" value="@webtoken" size="150" /><br /><br />
                 <input type="submit" value="Submit" class="submit" />
             </form>
             <p>
@@ -36,31 +44,61 @@
 
                 <a href="http://ampdemo.azureedge.net/azuremediaplayer.html?url=@urlencoded_proxyurl&format=hls&aes=true">HLS Proxy URL played by Azure Media player at http://aka.ms/azuremediaplayer </a> <br /> <br />
             </p>
-            <video id="vid1" class="azuremediaplayer amp-default-skin" autoplay controls width="640" height="400" data-setup='{"techOrder": ["azureHtml5JS", "flashSS", "silverlightSS", "html5"], "nativeControlsForTouch": false}'>
 
-            @*<source src="@playbackurl"
-                    type="application/vnd.ms-sstr+xml"
-                    data-setup='{"protectionInfo": [{"type": "AES", "authenticationToken": "Bearer=@webtoken"}],"streamingFormats":["SMOOTH","DASH"]}' />
-            <source src="/@proxyurl&webtoken=@urlencoded_webtoken" type="application/vnd.apple.mpegurl" data-setup='{"disableUrlRewriter": true}' />*@
-
-                <source src="@playbackurl"
+            //AMP Player code
+            <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin" autoplay controls width="640" height="400"></video>
+                <!--To do it as HTML use the AMP player code below-->
+                @*<source src="@playbackurl"
                         type="application/vnd.ms-sstr+xml"
-                        data-setup='{"protectionInfo": [{"type": "AES", "authenticationToken": "Bearer=@webtoken"}],"streamingFormats":["SMOOTH","DASH"]}' />
-                <source src="/@proxyurl&webtoken=@urlencoded_webtoken" type="application/vnd.apple.mpegurl" data-setup='{"disableUrlRewriter": true}' />
-          </video>
+                        data-setup='{"protectioninfo": [{"type": "aes", "authenticationtoken": "bearer=@webtoken"}],"streamingformats":["smooth","dash"]}' />
+                <source src="/@proxyurl&webtoken=@urlencoded_webtoken"
+                        type="application/vnd.apple.mpegurl"
+                        data-setup='{"type": "aes", "disableurlrewriter": true}' /> do not need the bearer token in this instance since that is included on the streaming src url*@
+            <script>
+                    var myOptions = {
+                        autoplay: true,
+                        controls: true,
+                        width: "640",
+                        height: "400"
+                    };
+                    var myPlayer = amp("azuremediaplayer", myOptions);
+		            //note: you will need to implement the proxy as outlined in this blog (https://azure.microsoft.com/en-us/blog/how-to-make-token-authorized-aes-encrypted-hls-stream-working-in-safari/)
+		            //in this example the HLS link is faked to show how this would work. In a real application, the HLS link should be pointing to the proxy with a token as the query parameter.
+                    //Here we're defining 2 urls, the 1st source link is for smooth/dash and the 2nd source link is for hls 
+                    myPlayer.src([{
+                        src: "@playbackurl",
+                        type: "application/vnd.ms-sstr+xml",
+                        streamingFormats: ["SMOOTH", "DASH"],
+                        protectionInfo: [{
+                                type: "AES",
+                                authenticationToken: "Bearer=@webtoken"
+                            }
+                        ]
+                    },
+                        {
+                        src: "/@proxyurl&webtoken=@urlencoded_webtoken",
+                        type: "application/vnd.apple.mpegurl",
+                        disableUrlRewriter: true,
+                        protectionInfo: [{
+                            type: "AES"
+                            //no need for the bearer token since this will be added to the streaming url with the HLS Proxy
+                            }
+                        ]
+                         }
+                   ]);
+
+
+            </script>
         }
         else
         {
-<form method="post" action="">
-    Manifest URL:<br />
-    <input type="text" name="playbackurl" value="https://amstest-usea.streaming.media.azure.net/e0aef0e0-e5ac-4dbc-96c0-386f4f5e186d/10minMorningYoga.ism/manifest" size="150" /><br />
-    JWT Token:<br />
-    <input type="text" name="webtoken" value="" size="150" /><br /><br />
-    <input type="submit" value="Submit" class="submit" />
-</form>
+            <form method="post" action="">
+                Manifest URL:<br />
+                <input type="text" name="playbackurl" value="https://amstest-usea.streaming.media.azure.net/e0aef0e0-e5ac-4dbc-96c0-386f4f5e186d/10minMorningYoga.ism/manifest" size="150" /><br />
+                JWT Token:<br />
+                <input type="text" name="webtoken" value="" size="150" /><br /><br />
+                <input type="submit" value="Submit" class="submit" />
+            </form>
         }
     }
 </div>
-<! -- what works: format=m3u8-aapl, token with key id as claim; format=m3u8-aapl, token with key id -->
-<!-- what doesn't work: format=m3u8-aapl-v3, token with key id as claim -->
-@*Bearer urn%3amicrosoft%3aazure%3amediaservices%3acontentkeyidentifier=2f04925a-ff16-474a-87cc-c73bbb76ba20&Audience=urn%3atest&ExpiresOn=1475247485&Issuer=http%3a%2f%2ftestacs&HMACSHA256=Fq6uFJxD4jyiM%2bKjwDmCBUqmWtN2C1SPJmKjLgtdSfU%3d*@

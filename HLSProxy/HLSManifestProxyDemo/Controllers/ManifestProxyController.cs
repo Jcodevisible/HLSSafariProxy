@@ -26,11 +26,11 @@ namespace Microsoft.Azure.CloudVideo.VideoManagementService.Cms.Controllers
         public class ManifestProxyController : ApiController
     {
 
-            private static readonly string Issuer = "<replace with yourIssuer>";
-            private static readonly string Audience = "<replace with youryAudience>";
-            private static readonly string PrimaryVerificationKey = "<put your symmetrykey here>";
+            private static readonly string Issuer = "<your issuer>";
+            private static readonly string Audience = "<your audience>";
+            private static readonly string PrimaryVerificationKey = "<your key>"; //symmetrickey
             private static byte[] TokenSigningKey = new byte[40];
-            private static readonly string ContentKeyPolicyName = "<replace with youryContentKeyPolicy>";
+            private static readonly string ContentKeyPolicyName = "<your content key policy name>";
             /// <summary>
             ///     Support for: GET /api/ManifestProxy(playbackUrl,token)
             /// </summary>
@@ -109,11 +109,6 @@ namespace Microsoft.Azure.CloudVideo.VideoManagementService.Cms.Controllers
                     // Use the  HmacSha256 and not the HmacSha256Signature option, or the token will not work!
                     SecurityAlgorithms.HmacSha256,
                     SecurityAlgorithms.Sha256Digest);
-
-                //Claim[] claims = new Claim[]
-                //{
-                //    new Claim(ContentKeyPolicyTokenClaim.ContentKeyIdentifierClaim.ClaimType, keyIdentifier)
-                //};
 
                 JwtSecurityToken token = new JwtSecurityToken(
                     issuer: issuer,

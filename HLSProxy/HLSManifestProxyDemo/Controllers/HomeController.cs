@@ -16,11 +16,11 @@ namespace HLSManifestProxyDemo.Controllers
     public class HomeController : Controller
     {
         private const string C_MANIFESTPROXYURLTEMPLATE = "http://{0}/api/ManifestProxy";
-        private static readonly string Issuer = "<replace with yourIssuer>";
-        private static readonly string Audience = "<replace with youryAudience>";
-        private static readonly string PrimaryVerificationKey = "<put your symmetrykey here>";
+        private static readonly string Issuer = "<your issuer>";
+        private static readonly string Audience = "<your audience>";
+        private static readonly string PrimaryVerificationKey = "<your key>";
         private static byte[] TokenSigningKey = new byte[40];
-        private static readonly string ContentKeyPolicyName = "<replace with youryContentKeyPolicy>";
+        private static readonly string ContentKeyPolicyName = "<your contentkey policy name>";
 
         public HomeController()
         {            
